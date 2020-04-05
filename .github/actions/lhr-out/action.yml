@@ -1,7 +1,10 @@
-name: 'Report Challenge 1'
-description: 'report test stats for challenge 1 audits'
+name: 'Report Lighthouse'
+description: 'report lighthouse stats for challenge-4'
 inputs:
-  api-base:  
+  lang:
+    description: 'the programming language in use'
+    required: true
+  server:  
     description: 'base API endpoint URL'
     required: true
     default: 'https://us-central1-buildforsdg.cloudfunctions.net/api'

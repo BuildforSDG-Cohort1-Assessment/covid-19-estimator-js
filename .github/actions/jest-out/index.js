@@ -1,10 +1,22 @@
+const axios = require('axios');
 const core = require('@actions/core');
 const { context } = require("@actions/github");
-const axios = require('axios');
-const stats = require('../../../audits/ch-2.json');
+
+const CHALLENGES = {
+  'ch-1': 'challenge-01',
+  'ch-2': 'challenge-02',
+  'ch-3': 'challenge-03',
+  'ch-4': 'challenge-04',
+  'ch-5': 'challenge-05'
+};
 
 const run = async () => {
     try {     
+        const task = core.getInput('challenge');
+        const language = core.getInput('lang');
+        const challenge = CHALLENGES[task];
+        const stats = require(`../../../audits/${task}.json`);
+      
         const repo = context.repo.repo;
         const owner = context.repo.owner;
         
@@ -17,13 +29,16 @@ const run = async () => {
         } = stats;
 
         const report = {
-          repo, owner,
+          repo, 
+          owner,
+          language,
           numTotalTests, 
-          numPassedTests, 
+          source: 'jest',
+          numPassedTests,
+          type: challenge,
           numPendingTests,
           numTotalTestSuites, 
-          numPassedTestSuites,
-          type: 'challenge-02'
+          numPassedTestSuites
         };
 
         if(stats.testResults) {
@@ -34,9 +49,8 @@ const run = async () => {
           }
         }
 
-        const apiBase = core.getInput('api-base');
-        const { result } = await axios.post(`${apiBase}/entry-tests`, {report});
-        core.info(result);
+        const server = core.getInput('server');
+        await axios.post(`${server}/entry-tests`, {report});
 
       } catch (error) {
         core.setFailed(error.message);
