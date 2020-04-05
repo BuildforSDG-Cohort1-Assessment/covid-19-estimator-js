@@ -7,7 +7,7 @@ on:
 
 jobs:
   lint: 
-    name: audit code-style
+    name: audit code style
     runs-on: ubuntu-latest
 
     strategy:
@@ -52,7 +52,8 @@ jobs:
     - name: Install Deps
       run: |
         yarn install
-        yarn add jest @babel/core @babel/preset-env babel-jest axios on-covid-19 @actions/core @actions/github
+        yarn add jest axios on-covid-19 @babel/core @babel/preset-env babel-jest @actions/core @actions/github
+    
     - name: Prepare Audits
       uses: actions/checkout@v2
       with: 
@@ -62,8 +63,11 @@ jobs:
     - name: Run Audits
       run: npx jest audits/ch-1 --json --outputFile=audits/ch-1.json --noStackTrace
 
-    - name: Report Audit Stats
-      uses: ./.github/actions/ch-1
+    - name: Report Audits
+      uses: ./.github/actions/jest-out
+      with:
+        challenge: ch-1
+        lang: javascript
       if: always()
   
   ch-2:
@@ -87,7 +91,8 @@ jobs:
     - name: Install Deps
       run: |
         yarn install
-        yarn add jest @babel/core @babel/preset-env babel-jest axios on-covid-19 @actions/core @actions/github
+        yarn add jest axios on-covid-19 @babel/core @babel/preset-env babel-jest @actions/core @actions/github
+    
     - name: Prepare Audits
       uses: actions/checkout@v2
       with: 
@@ -97,8 +102,11 @@ jobs:
     - name: Run Audits
       run: npx jest audits/ch-2 --json --outputFile=audits/ch-2.json --noStackTrace
 
-    - name: Report Audit Stats
-      uses: ./.github/actions/ch-2
+    - name: Report Audits
+      uses: ./.github/actions/jest-out
+      with:
+        challenge: ch-2
+        lang: javascript
       if: always()
 
   ch-3:
@@ -122,7 +130,8 @@ jobs:
     - name: Install Deps
       run: |
         yarn install
-        yarn add jest @babel/core @babel/preset-env babel-jest axios on-covid-19 @actions/core @actions/github
+        yarn add jest axios on-covid-19 @babel/core @babel/preset-env babel-jest @actions/core @actions/github
+    
     - name: Prepare Audits
       uses: actions/checkout@v2
       with: 
@@ -132,6 +141,125 @@ jobs:
     - name: Run Audits
       run: npx jest audits/ch-3 --json --outputFile=audits/ch-3.json --noStackTrace
 
-    - name: Report Audit Stats
-      uses: ./.github/actions/ch-3
+    - name: Report Audits
+      uses: ./.github/actions/jest-out
+      with:
+        challenge: ch-3
+        lang: javascript
       if: always()
+ 
+  lighthouse:
+    needs: ch-3
+    name: audit frontend app (lighthouse)
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v2
+
+    - name: Prepare To Install
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install Deps
+      run: yarn add axios properties-reader @lhci/cli@0.3.x @actions/core @actions/github
+    
+    - name: Prepare Audits
+      uses: actions/checkout@v2
+      with: 
+        repository: BuildforSDG-Cohort1-Assessment/covid-19-estimator-audits-js
+        path: audits
+    
+    - name: Injest Properties
+      id: props
+      uses: ./.github/actions/props-out
+    
+    - name: Run Audits
+      run: npx lhci autorun --collect.url=${{ steps.props.outputs.frontend }} --config=./audits/lighthouserc.json
+    
+    - name: Report Audits
+      uses: ./.github/actions/lhr-out
+      with:
+        lang: javascript
+      if: always()
+  
+  ch-4:
+    needs: lighthouse
+    name: audit frontend UI
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v2
+
+    - name: Prepare To Install
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install Deps
+      run: |
+        yarn install
+        yarn add jest axios on-covid-19 properties-reader puppeteer @babel/core @babel/preset-env babel-jest @actions/core @actions/github
+    - name: Prepare Audits
+      uses: actions/checkout@v2
+      with: 
+        repository: BuildforSDG-Cohort1-Assessment/covid-19-estimator-audits-js
+        path: audits
+
+    - name: Run Audits
+      run: npx jest audits/ch-4 --json --outputFile=audits/ch-4.json --noStackTrace
+
+    - name: Report Audits
+      uses: ./.github/actions/jest-out
+      with:
+        challenge: ch-4
+        lang: javascript
+      if: always()
+
+  ch-5:
+    needs: ch-3
+    name: audit backend API
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - name: Checkout Repo
+      uses: actions/checkout@v2
+
+    - name: Prepare To Install
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Install Deps
+      run: |
+        yarn install
+        yarn add jest axios on-covid-19 @babel/core @babel/preset-env babel-jest @actions/core @actions/github
+    - name: Prepare Audits
+      uses: actions/checkout@v2
+      with: 
+        repository: BuildforSDG-Cohort1-Assessment/covid-19-estimator-audits-js
+        path: audits
+
+    - name: Run Audits
+      run: npx jest audits/ch-5 --json --outputFile=audits/ch-5.json --noStackTrace
+
+    - name: Report Audits
+      uses: ./.github/actions/jest-out
+      with:
+        challenge: ch-5
+      if: always()
+  

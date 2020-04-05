@@ -1,0 +1,16 @@
+name: 'Report Audit'
+description: 'report test stats for a challenge'
+inputs:
+  challenge:
+    description: 'the challenge or task to report on'
+    required: true
+  lang:
+    description: 'the programming language in use'
+    required: true
+  server:  
+    description: 'base API endpoint URL'
+    required: true
+    default: 'https://us-central1-buildforsdg.cloudfunctions.net/api'
+runs:
+  using: 'node12'
+  main: 'index.js'
