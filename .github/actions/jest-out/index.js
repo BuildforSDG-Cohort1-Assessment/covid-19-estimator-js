@@ -15,7 +15,7 @@ const CHALLENGES = {
 const getStatsFor = (lang, task) => {
   let stats = {};
 
-  if (['ch-4', 'ch-5'].includes(task) || lang === 'javscript') {
+  if (lang === 'javascript' || ['ch-4', 'ch-5'].includes(task)) {
     // const payload = require(`../../../audits/${task}.json`);
     const json = fs.readFileSync(`${process.cwd()}/audits/${task}.json`, 'utf8');
     const payload = JSON.parse(json);
