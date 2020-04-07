@@ -52,7 +52,7 @@ jobs:
     - name: Install Deps
       run: |
         yarn install
-        yarn add jest axios on-covid-19 @babel/core @babel/preset-env babel-jest @actions/core @actions/github
+        yarn add jest axios xml2json @babel/core @babel/preset-env babel-jest @actions/core @actions/github
     
     - name: Prepare Audits
       uses: actions/checkout@v2
@@ -91,7 +91,7 @@ jobs:
     - name: Install Deps
       run: |
         yarn install
-        yarn add jest axios on-covid-19 @babel/core @babel/preset-env babel-jest @actions/core @actions/github
+        yarn add jest axios xml2json @babel/core @babel/preset-env babel-jest @actions/core @actions/github
     
     - name: Prepare Audits
       uses: actions/checkout@v2
@@ -130,7 +130,7 @@ jobs:
     - name: Install Deps
       run: |
         yarn install
-        yarn add jest axios on-covid-19 @babel/core @babel/preset-env babel-jest @actions/core @actions/github
+        yarn add jest axios xml2json @babel/core @babel/preset-env babel-jest @actions/core @actions/github
     
     - name: Prepare Audits
       uses: actions/checkout@v2
@@ -209,7 +209,8 @@ jobs:
     - name: Install Deps
       run: |
         yarn install
-        yarn add jest axios on-covid-19 properties-reader puppeteer @babel/core @babel/preset-env babel-jest @actions/core @actions/github
+        yarn add jest axios on-covid-19 properties-reader xml2json puppeteer @babel/core @babel/preset-env babel-jest @actions/core @actions/github
+
     - name: Prepare Audits
       uses: actions/checkout@v2
       with: 
@@ -217,7 +218,9 @@ jobs:
         path: audits
 
     - name: Run Audits
-      run: npx jest audits/ch-4 --json --outputFile=audits/ch-4.json --noStackTrace
+      run: |
+        yarn install
+        npx jest audits/ch-4 --json --outputFile=audits/ch-4.json --noStackTrace
 
     - name: Report Audits
       uses: ./.github/actions/jest-out
@@ -247,7 +250,8 @@ jobs:
     - name: Install Deps
       run: |
         yarn install
-        yarn add jest axios on-covid-19 @babel/core @babel/preset-env babel-jest @actions/core @actions/github
+        yarn add jest axios on-covid-19 properties-reader xml2json @babel/core @babel/preset-env babel-jest @actions/core @actions/github
+
     - name: Prepare Audits
       uses: actions/checkout@v2
       with: 
@@ -255,11 +259,14 @@ jobs:
         path: audits
 
     - name: Run Audits
-      run: npx jest audits/ch-5 --json --outputFile=audits/ch-5.json --noStackTrace
+      run: |
+        yarn install
+        npx jest audits/ch-5 --json --outputFile=audits/ch-5.json --noStackTrace
 
     - name: Report Audits
       uses: ./.github/actions/jest-out
       with:
         challenge: ch-5
+        lang: javascript
       if: always()
   
