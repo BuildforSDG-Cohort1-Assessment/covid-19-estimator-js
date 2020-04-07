@@ -15,27 +15,23 @@ const CHALLENGES = {
 const getStatsFor = (lang, task) => {
   let stats = {};
 
-  if (lang === 'javascript' || lang === 'python' || ['ch-4', 'ch-5'].includes(task)) {
+  if (lang === 'javascript' || ['ch-4', 'ch-5'].includes(task)) {
     // const payload = require(`../../../audits/${task}.json`);
     const json = fs.readFileSync(`${process.cwd()}/audits/${task}.json`, 'utf8');
     const payload = JSON.parse(json);
-
-    // HINT: how data looks
-    // {
-    //   numFailedTestSuites: 1,
-    //   numFailedTests: 1,
-    //   numPassedTestSuites: 0,
-    //   numPassedTests: 0,
-    //   numPendingTestSuites: 0,
-    //   numPendingTests: 0,
-    //   numRuntimeErrorTestSuites: 0,
-    //   numTodoTests: 0,
-    //   numTotalTestSuites: 1,
-    //   numTotalTests: 1
-    // }
-
     stats.totalTests = payload.numTotalTests;
     stats.passedTests = payload.numPassedTests;
+  }
+
+  if (lang === 'python') {
+    // JSON:: report > summary > passed | num_tests
+    const json = fs.readFileSync(`${process.cwd()}/audits/${task}.json`, 'utf8');
+    const data = JSON.parse(json);
+    console.log(data);
+
+    const payload = data.report.summary;
+    stats.totalTests = payload.num_tests;
+    stats.passedTests = payload.passed;
   }
 
   if (lang === 'php') {
