@@ -169,12 +169,6 @@ jobs:
     - name: Install Deps
       run: yarn add axios properties-reader @lhci/cli@0.3.x @actions/core @actions/github
     
-    - name: Prepare Audits
-      uses: actions/checkout@v2
-      with: 
-        repository: BuildforSDG-Cohort1-Assessment/covid-19-estimator-audits-js
-        path: audits
-    
     - name: Injest Properties
       id: props
       uses: ./.github/actions/props-out
