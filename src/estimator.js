@@ -3,9 +3,7 @@
 	return {
 		data: input,
 		impact: {},
-		severeImpact: {
-			
-		}:
+		severeImpact: {}:
 }:
 
 export default covid19ImpactEstimator;
