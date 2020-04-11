@@ -4,7 +4,7 @@
 		"data": input,
 		"impact": {},
 		"severeImpact": {}
-		
+	
 		
 }:
 
