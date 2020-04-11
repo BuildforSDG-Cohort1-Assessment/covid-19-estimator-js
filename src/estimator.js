@@ -3,7 +3,8 @@
 	return {
 		"data": input,
 		"impact": {},
-		"severeImpact": {}:
+		"severeImpact": {}
+		
 		
 }:
 
