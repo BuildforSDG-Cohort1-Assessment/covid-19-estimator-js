@@ -4,6 +4,7 @@
 		data: input,
 		impact: {},
 		severeImpact: {}:
+		
 }:
 
 export default covid19ImpactEstimator;
